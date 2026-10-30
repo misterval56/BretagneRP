@@ -1,0 +1,10 @@
+{
+  "name": "Bretagne RP",
+  "discord": "https://discord.gg/REMPLACE_MOI",
+  "description": "Une communauté, des histoires à écrire. Rejoins l'aventure et prends part à la vie de Bretagne RP.",
+  "longDescription": "Bretagne RP rassemble des joueurs autour d'une même envie : partager de bons moments, créer des histoires et construire une communauté accueillante.",
+  "logo": "assets/logo.svg",
+  "banner": "assets/banner.svg",
+  "members": 0,
+  "target": 1000
+}
