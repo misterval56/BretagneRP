@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="fr"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin — Bretagne RP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="admin">
+  <h1>Admin Bretagne RP</h1>
+  <p style="color:var(--muted);font-size:13px">Édite les données, puis clique sur « Exporter » et copie le code dans <code>app.js</code>.</p>
+  <div class="note">
+    ⚠️ Outil local : rien n'est publié automatiquement. Exporte le code et remplace l'objet <code>DATA</code> dans <code>app.js</code>.
+  </div>
+
+  <section>
+    <h2>Identité du serveur</h2>
+    <label>Nom<input id="f-name"></label>
+    <label>Lien Discord<input id="f-discord"></label>
+    <label>Description courte<textarea id="f-desc"></textarea></label>
+    <label>Description longue<textarea id="f-long"></textarea></label>
+    <div class="row">
+      <label>URL bannière<input id="f-banner"></label>
+      <label>URL logo<input id="f-logo"></label>
+    </div>
+    <div class="row">
+      <label>Membres<input id="f-members" type="number"></label>
+      <label>Objectif<input id="f-target" type="number"></label>
+    </div>
+    <button class="button primary" onclick="saveConfig()">Enregistrer (session)</button>
+  </section>
+
+  <section>
+    <h2>Ajouter un partenaire</h2>
+    <label>Nom<input id="p-name"></label>
+    <label>Description<textarea id="p-desc"></textarea></label>
+    <div class="row">
+      <label>URL logo<input id="p-logo"></label>
+      <label>URL bannière<input id="p-banner"></label>
+    </div>
+    <label>Lien Discord<input id="p-discord"></label>
+    <button class="button primary" onclick="addPartner()">Ajouter</button>
+    <div id="p-list" style="margin-top:14px"></div>
+  </section>
+
+  <section>
+    <h2>Exporter</h2>
+    <p style="font-size:12px;color:var(--muted)">Copie le contenu ci-dessous et remplace l'objet <code>DATA</code> au début de <code>app.js</code>.</p>
+    <pre id="export-box"></pre>
+    <button class="button primary" onclick="copyExport()">Copier le code</button>
+    <button class="button secondary" onclick="downloadExport()">Télécharger app.js</button>
+  </section>
+</div>
+
+<script>
+let DATA = JSON.parse(localStorage.getItem("brp-data") || "null") || {
+  name: "Bretagne RP",
+  discord: "https://discord.gg/7kNWQVs4sY",
+  description: "Une communauté, des histoires à écrire.",
+  longDescription: "Bretagne RP rassemble des joueurs autour d'une même envie.",
+  banner: "https://i.postimg.cc/50PfSxfT/Bretagne-RP-communaute-cotiere-en.png",
+  logo: "https://i.postimg.cc/bvxJkcDc/Bretagne-RP-communaute-cotiere-en-lumiere.png",
+  members: 250,
+  target: 1000,
+  partners: []
+};
+
+const $ = id => document.getElementById(id);
+
+function fill() {
+  $("f-name").value = DATA.name;
+  $("f-discord").value = DATA.discord;
+  $("f-desc").value = DATA.description;
+  $("f-long").value = DATA.longDescription;
+  $("f-banner").value = DATA.banner;
+  $("f-logo").value = DATA.logo;
+  $("f-members").value = DATA.members;
+  $("f-target").value = DATA.target;
+  renderList();
+  updateExport();
+}
+
+function renderList() {
+  $("p-list").innerHTML = DATA.partners.map((p, i) => `
+    <div class="item">
+      <span><strong>${p.name}</strong> — ${p.discord}</span>
+      <button class="del" onclick="removePartner(${i})">Suppr.</button>
+    </div>`).join("") || "<p style='font-size:12px;color:var(--muted)'>Aucun partenaire.</p>";
+}
+
+function persist() {
+  localStorage.setItem("brp-data", JSON.stringify(DATA));
+  updateExport();
+}
+
+function updateExport() {
+  const code =
+    "const DATA = " + JSON.stringify(DATA, null, 2) + ";\n\n" +
+    "/* ... suite de app.js ... */";
+  $("export-box").textContent = code;
+}
+
+function saveConfig() {
+  DATA.name = $("f-name").value.trim();
+  DATA.discord = $("f-discord").value.trim();
+  DATA.description = $("f-desc").value.trim();
+  DATA.longDescription = $("f-long").value.trim();
+  DATA.banner = $("f-banner").value.trim();
+  DATA.logo = $("f-logo").value.trim();
+  DATA.members = Number($("f-members").value) || 0;
+  DATA.target = Math.max(1, Number($("f-target").value) || 1000);
+  persist();
+  alert("Enregistré en session. N'oublie pas d'exporter !");
+}
+
+function addPartner() {
+  const p = {
+    name: $("p-name").value.trim(),
+    description: $("p-desc").value.trim(),
+    logo: $("p-logo").value.trim(),
+    banner: $("p-banner").value.trim(),
+    discord: $("p-discord").value.trim()
+  };
+  if (!p.name || !p.discord) return alert("Nom et Discord obligatoires.");
+  DATA.partners.push(p);
+  ["p-name","p-desc","p-logo","p-banner","p-discord"].forEach(id => $(id).value = "");
+  persist();
+  renderList();
+}
+
+function removePartner(i) {
+  DATA.partners.splice(i, 1);
+  persist();
+  renderList();
+}
+
+function copyExport() {
+  navigator.clipboard.writeText($("export-box").textContent);
+  alert("Code copié !");
+}
+
+function downloadExport() {
+  const base = document.querySelector("script").textContent;
+  const code = `const DATA = ${JSON.stringify(DATA, null, 2)};\n` + base.split("const DATA =")[1].split("};")[1];
+  const blob = new Blob([code], { type: "text/javascript" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "app.js";
+  a.click();
+}
+
+fill();
+</script>
+</body></html>

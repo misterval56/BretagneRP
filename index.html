@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bretagne RP</title>
+<meta name="description" content="Bretagne RP — communauté roleplay sur Discord.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="home">
+<div id="site-header"></div>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <span class="eyebrow">Communauté roleplay • France</span>
+      <h1 id="hero-title">Bienvenue sur<br><span class="gradient">Bretagne RP.</span></h1>
+      <p class="lead" id="hero-desc"></p>
+      <div class="actions">
+        <a class="button primary" id="join-btn" href="#" target="_blank" rel="noopener">Rejoindre le serveur ↗</a>
+        <a class="button secondary" href="partenaires.html">Voir les partenaires →</a>
+      </div>
+    </div>
+    <div>
+      <div class="banner" id="hero-banner"></div>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:14px">
+        <div class="partner-logo" id="hero-logo" style="width:54px;height:54px;border:3px solid var(--bg)"></div>
+        <div>
+          <strong id="hero-name" style="display:block"></strong>
+          <span style="font-size:12px;color:var(--muted)">Communauté Discord</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats">
+    <div class="stat"><strong id="stat-members">—</strong><span>Membres</span></div>
+    <div class="stat"><strong id="stat-partners">—</strong><span>Partenaires</span></div>
+    <div class="stat"><strong>100%</strong><span>Communauté</span></div>
+  </section>
+
+  <section class="section">
+    <span class="eyebrow">À propos</span>
+    <h2>Plus qu'un serveur,<br>une communauté.</h2>
+    <p id="hero-long" style="max-width:640px"></p>
+
+    <div style="margin-top:24px;background:#111626aa;border:1px solid #ffffff14;border-radius:14px;padding:20px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:10px">
+        <strong>Objectif membres</strong>
+        <span id="goal-text" style="color:var(--muted)"></span>
+      </div>
+      <div style="height:10px;background:#ffffff13;border-radius:20px;overflow:hidden">
+        <div id="goal-fill" style="height:100%;width:0;background:linear-gradient(90deg,#5865f2,#b078ff);transition:width 1s"></div>
+      </div>
+      <a class="button primary" id="join-btn2" href="#" target="_blank" rel="noopener" style="margin-top:16px">Je rejoins l'aventure ↗</a>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="app.js"></script>
+</body></html>
